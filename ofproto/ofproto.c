@@ -3827,6 +3827,7 @@ handle_flow_stats_request(struct ofconn *ofconn,
         fs.ofpacts_len = actions->ofpacts_len;
 
         fs.flags = flags;
+        fs.importance=rule->importance;
         ofputil_append_flow_stats_reply(&fs, &replies);
     }
 
@@ -4237,6 +4238,7 @@ add_flow(struct ofproto *ofproto, struct ofputil_flow_mod *fm,
     ovs_mutex_lock(&rule->mutex);
     rule->idle_timeout = fm->idle_timeout;
     rule->hard_timeout = fm->hard_timeout;
+    rule->importance = fm->importance;
     ovs_mutex_unlock(&rule->mutex);
 
     *CONST_CAST(uint8_t *, &rule->table_id) = table - ofproto->tables;

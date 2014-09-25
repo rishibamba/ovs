@@ -1700,6 +1700,7 @@ ofputil_decode_flow_mod(struct ofputil_flow_mod *fm,
 
         fm->idle_timeout = ntohs(ofm->idle_timeout);
         fm->hard_timeout = ntohs(ofm->hard_timeout);
+        fm->importance = ntohs(ofm->importance);
         fm->buffer_id = ntohl(ofm->buffer_id);
         error = ofputil_port_from_ofp11(ofm->out_port, &fm->out_port);
         if (error) {
@@ -1738,6 +1739,7 @@ ofputil_decode_flow_mod(struct ofputil_flow_mod *fm,
             fm->new_cookie = ofm->cookie;
             fm->idle_timeout = ntohs(ofm->idle_timeout);
             fm->hard_timeout = ntohs(ofm->hard_timeout);
+            fm->importance = 0;
             fm->buffer_id = ntohl(ofm->buffer_id);
             fm->out_port = u16_to_ofp(ntohs(ofm->out_port));
             fm->out_group = OFPG11_ANY;
@@ -2248,6 +2250,7 @@ ofputil_encode_flow_mod(const struct ofputil_flow_mod *fm,
         ofm->out_port = ofputil_port_to_ofp11(fm->out_port);
         ofm->out_group = htonl(fm->out_group);
         ofm->flags = raw_flags;
+        ofm->importance = htons(fm->importance);
         ofputil_put_ofp11_match(msg, &fm->match, protocol);
         ofpacts_put_openflow_instructions(fm->ofpacts, fm->ofpacts_len, msg,
                                           version);
@@ -2834,6 +2837,7 @@ ofputil_decode_flow_stats_reply(struct ofputil_flow_stats *fs,
         fs->duration_nsec = ntohl(ofs->duration_nsec);
         fs->idle_timeout = ntohs(ofs->idle_timeout);
         fs->hard_timeout = ntohs(ofs->hard_timeout);
+        fs->importance = ntohs(ofs->importance);
         if (raw == OFPRAW_OFPST13_FLOW_REPLY) {
             error = ofputil_decode_flow_mod_flags(ofs->flags, -1, oh->version,
                                                   &fs->flags);
@@ -2977,6 +2981,7 @@ ofputil_append_flow_stats_reply(const struct ofputil_flow_stats *fs,
         ofs->priority = htons(fs->priority);
         ofs->idle_timeout = htons(fs->idle_timeout);
         ofs->hard_timeout = htons(fs->hard_timeout);
+        ofs->importance = htons(fs->importance);
         if (raw == OFPRAW_OFPST13_FLOW_REPLY) {
             ofs->flags = ofputil_encode_flow_mod_flags(fs->flags, version);
         } else {

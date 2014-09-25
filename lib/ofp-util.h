@@ -306,6 +306,7 @@ struct ofputil_flow_mod {
     ofp_port_t out_port;
     uint32_t out_group;
     enum ofputil_flow_mod_flags flags;
+    uint16_t importance;     /* Eviction Precedence */ 
     struct ofpact *ofpacts;  /* Series of "struct ofpact"s. */
     size_t ofpacts_len;      /* Length of ofpacts, in bytes. */
 
@@ -355,6 +356,7 @@ struct ofputil_flow_stats {
     const struct ofpact *ofpacts;
     size_t ofpacts_len;
     enum ofputil_flow_mod_flags flags;
+    uint16_t importance;        /* Eviction Precedence */
 };
 
 int ofputil_decode_flow_stats_reply(struct ofputil_flow_stats *,
@@ -391,6 +393,7 @@ struct ofputil_flow_removed {
     uint16_t hard_timeout;
     uint64_t packet_count;      /* Packet count, UINT64_MAX if unknown. */
     uint64_t byte_count;        /* Byte count, UINT64_MAX if unknown. */
+    uint16_t importance;        /* Eviction Precedence */
 };
 
 enum ofperr ofputil_decode_flow_removed(struct ofputil_flow_removed *,

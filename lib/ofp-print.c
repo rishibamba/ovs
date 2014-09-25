@@ -1431,6 +1431,9 @@ ofp_print_flow_stats(struct ds *string, struct ofputil_flow_stats *fs)
     if (fs->flags) {
         ofp_print_flow_flags(string, fs->flags);
     }
+    if (fs->importance != OFP_FLOW_PERMANENT) {                                        
+        ds_put_format(string, "importance=%"PRIu16", ", fs->importance);
+    }
     if (fs->idle_age >= 0) {
         ds_put_format(string, "idle_age=%d, ", fs->idle_age);
     }
